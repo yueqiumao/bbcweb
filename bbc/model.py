@@ -7,7 +7,11 @@ logger.addHandler(logging.StreamHandler())
 
 db = SqliteDatabase('yqmiot.db')
 
-class Device(Model):
+class BaseModel(Model):
+    class Meta:
+        database = db
+
+class Device(BaseModel):
     did = PrimaryKeyField() # 设备id
     name = CharField() # 名称
     model = CharField() # 设备型号
@@ -15,10 +19,7 @@ class Device(Model):
     token = CharField() # 密码
     create_time = DateField() # 创建时间
 
-    class Meta:
-        database = db
-
-class User(Model):
+class User(BaseModel):
     uid = PrimaryKeyField()
     username = CharField() # 用户名，符合一定规则
     nickname = CharField() # 用来展示的
@@ -26,8 +27,10 @@ class User(Model):
     email = CharField()
     create_time = DateField() # 创建时间
 
-    class Meta:
-        database = db
+class Config(BaseModel):
+    id = PrimaryKeyField()
+    key = CharField()
+    value = CharField()
 
 if __name__ == "__main__":
-    db.create_tables([Device, User])
+    db.create_tables([Device, User, Config])
