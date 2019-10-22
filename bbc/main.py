@@ -1,27 +1,39 @@
 import os
 import sys
 import time
+import asyncio
 
 import sqlite3
 import jinja2
 import peewee
-import aiohttp.web
 
-# async def index(request):
-#     return aiohttp.web.Response(text=u"这里是大球的小破车，大球的小破车将来可是要上天的")
 
-# app = aiohttp.web.Application()
-# app.add_routes([
-#     aiohttp.web.get("/", index)
-# ])
-# aiohttp.web.run_app(app)
+async def main_async():
+    print("BBC start ...")
 
-def main():
     import application
 
     app = application.Application()
-    app.setup()
-    app.run()
+
+    import mqttconnection
+    mc = mqttconnection.MqttConnection()
+    app.regist_component(mc)
+
+    import httpconnection
+    hc = httpconnection.HttpConnection()
+    app.regist_component(hc)
+
+    await app.setup()
+    await app.run()
+
+    print("BBC running ...")
+
+
+def main():
+    loop = asyncio.get_event_loop()
+    loop.create_task(main_async())
+    loop.run_forever()
+
 
 if __name__ == "__main__":
     main()
