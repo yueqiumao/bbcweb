@@ -1,5 +1,5 @@
 from peewee import *
-
+import peewee
 import logging
 logger = logging.getLogger('peewee')
 logger.setLevel(logging.DEBUG)
@@ -33,4 +33,9 @@ class Config(BaseModel):
     value = CharField()
 
 if __name__ == "__main__":
-    db.create_tables([Device, User, Config])
+    # db.create_tables([Device, User, Config])
+    # print(DeviceDoesNotExist)
+    try:
+        x = Device.get(Device.did==1000)
+    except Device.DoesNotExist:
+        print("没找到")

@@ -7,17 +7,14 @@ from hbmqtt.mqtt.constants import QOS_0, QOS_1, QOS_2
 
 async def main():
     client = MQTTClient()
-    await client.connect("mqtt://mikuq.com:21883")
+    await client.connect("mqtt://yqmiot.com")
     print("connected")
-    import time
-    time.sleep(10)
-    await client.subscribe([("bbc", QOS_0)])
-    print("sub ok")
 
-    while True:
-        time.sleep(1)
-        await client.publish("bbc", "葱头在不在？".encode("utf8"))
-        print("ok")
+    await client.publish("yqmiot/0/10003", '{"src": 10003, "dst": 0, "cmd": "login", "data": null}'.encode("utf8"))
+    print("ok")
+
+    import sys
+    sys.exit(0)
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
